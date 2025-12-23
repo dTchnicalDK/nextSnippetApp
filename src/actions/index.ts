@@ -66,6 +66,7 @@ export async function createSnippet(
 
   redirect("/snippet");
 }
+
 ///////////////saving snippet
 export async function saveSnippet(id: number, code: string) {
   const savedSnippet = await prisma.snippet.update({
@@ -83,14 +84,34 @@ export async function saveSnippet(id: number, code: string) {
 }
 
 ////////////////delete snippet from database
-export async function deleteSnippetById(id: number) {
-  await prisma.snippet.delete({
-    where: { id },
-  });
+export interface DeleteResponse {
+  isSuccess: boolean;
+  message: string;
+}
+export async function deleteSnippetById(
+  _previousState: DeleteResponse | null,
+  formData: FormData
+): Promise<DeleteResponse> {
+  try {
+    const id = Number(formData.get("id"));
+    if (!id) {
+      return {
+        isSuccess: false,
+        message: "invalid snippet ID !",
+      };
+    }
 
-  // Revalidate pages
-  revalidatePath("/snippet");
-
-  // Redirect after delete (recommended UX)
-  redirect("/snippet");
+    await prisma.snippet.delete({ where: { id } });
+    revalidatePath("/snippet");
+    return {
+      isSuccess: true,
+      message: "snippet deleted successfully!",
+    };
+  } catch (error) {
+    console.log("snippent deletion error", error);
+    return {
+      isSuccess: false,
+      message: "internal server error while deleting snippet !",
+    };
+  }
 }

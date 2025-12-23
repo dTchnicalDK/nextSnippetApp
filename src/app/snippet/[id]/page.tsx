@@ -1,4 +1,5 @@
-import { deleteSnippetById } from "@/actions";
+import { deleteSnippetById, DeleteResponse } from "@/actions";
+import DeleteSnippetButton from "@/components/deleteSnippet";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
@@ -13,13 +14,6 @@ const snippetDetailsPage = async ({
     where: { id },
   });
 
-  const deleteSnippet = async () => {
-    "use server";
-    console.log("id", snippet?.id);
-    const deletedSnippet = await deleteSnippetById(id);
-    console.log("sinppet deleted", deletedSnippet);
-  };
-
   return (
     <div className="max-w-full flex flex-col justify-center gap-3 mx-10">
       <div className="flex justify-between mt-2">
@@ -30,11 +24,12 @@ const snippetDetailsPage = async ({
           <Link href={`/snippet/${id}/edit`}>
             <Button>edit</Button>
           </Link>
-          <form action={deleteSnippet}>
+          {/* <form action={deleteSnippet}>
             <Button type="submit" variant="destructive">
               delete
             </Button>
-          </form>
+          </form> */}
+          <DeleteSnippetButton id={id} />
         </div>
       </div>
       <div className="bg-gray-300 p-8 rounded-xl">

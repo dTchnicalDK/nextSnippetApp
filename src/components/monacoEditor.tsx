@@ -4,8 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { saveSnippet } from "@/actions";
 import { toast } from "sonner";
-// import { redirect } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export interface MonacoEditorProps {
   id: number;
@@ -19,7 +18,7 @@ const MonacoEditor = ({
   language = "javascript",
 }: MonacoEditorProps) => {
   const [rawCode, setRawCode] = useState<string>(code);
-  // const router = useRouter();
+  const router = useRouter();
 
   //assinging code state fist time on component load
   useEffect(() => {
@@ -42,6 +41,13 @@ const MonacoEditor = ({
     }
   };
 
+  const handleCancel = () => {
+    const shouldCancel = confirm("Any unsaved data will be lost!");
+    if (shouldCancel) {
+      router.push(`/snippet/${id}`);
+    }
+  };
+
   return (
     <div className="rounded-xl overflow-hidden min-h-[50vh]">
       <div className="flex justify-end gap-5 my-2">
@@ -51,7 +57,11 @@ const MonacoEditor = ({
         >
           Save
         </Button>
-        <Button variant="destructive" className="cursor-pointer">
+        <Button
+          onClick={handleCancel}
+          variant="destructive"
+          className="cursor-pointer"
+        >
           Cancel
         </Button>
       </div>

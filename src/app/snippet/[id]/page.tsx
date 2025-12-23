@@ -37,9 +37,7 @@ const snippetDetailsPage = async ({
     <div className="w-full flex flex-col gap-5 p-5">
       {/* top section  */}
       <div className="flex justify-between ">
-        <h1 className="text-2xl font-bold text-gray-800">
-          {snippet?.title.toString()}
-        </h1>
+        <h1 className="text-2xl font-bold">{snippet?.title.toString()}</h1>
         <div className="flex gap-2">
           <Link href={`/snippet/${id}/edit`}>
             <Button>edit</Button>
